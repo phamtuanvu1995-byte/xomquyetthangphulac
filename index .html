@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Thông Tin Quản Lý Hành Chính Cơ Sở - Xóm Quyết Thắng</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1b4d3e;
+            --primary-hover: #14382c;
+            --secondary-color: #c29b38;
+            --accent-color: #d9534f;
+            --bg-body: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --border-color: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; padding: 10px; }
+        .portal-wrapper { max-width: 1300px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); overflow: hidden; }
+        .top-status-bar { background: #113328; color: #fff; padding: 10px 20px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .admin-login-btn { background: var(--secondary-color); color: #fff; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; }
+        .portal-banner { background: linear-gradient(135deg, var(--primary-color), #276953); color: white; padding: 35px 20px; text-align: center; }
+        .portal-banner h1 { font-size: 28px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .slogan-banner { background: #fff8e1; color: #b78103; text-align: center; padding: 12px; font-weight: bold; font-style: italic; font-size: 16px; border-bottom: 1px solid #ffe0b2; }
+        .dashboard-container { display: grid; grid-template-columns: 1fr 360px; gap: 25px; padding: 30px; }
+        @media (max-width: 1024px) { .dashboard-container { grid-template-columns: 1fr; } }
+        section { margin-bottom: 30px; }
+        h2.section-title { font-size: 18px; color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+        .intro-box { background: #eef4f2; border-left: 5px solid var(--primary-color); padding: 18px; border-radius: 0 8px 8px 0; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: #fff; border: 1px solid var(--border-color); border-radius: 8px; padding: 18px; text-align: center; border-top: 4px solid var(--primary-color); }
+        .stat-card .label { font-size: 13px; color: #666; text-transform: uppercase; font-weight: 600; }
+        .stat-card .value { font-size: 22px; font-weight: bold; color: var(--primary-color); margin-top: 6px; }
+        .officials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .official-card { background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; text-align: center; box-shadow: 0 3px 8px rgba(0,0,0,0.04); }
+        .official-card .avatar-icon { width: 70px; height: 70px; background: #eef4f2; color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; font-size: 28px; }
+        .official-card h3 { font-size: 17px; color: #222; margin-bottom: 6px; }
+        .official-card .position { font-weight: 600; color: var(--primary-color); font-size: 13px; min-height: 42px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .phone-btn { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; text-decoration: none; border: 1px solid #c8e6c9; }
+        .lookup-box { background: #fdfdfd; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-top: 15px; }
+        .search-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .search-group input { flex: 1; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; outline: none; }
+        .btn-action { background: var(--primary-color); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-action:hover { background: var(--primary-hover); }
+        .btn-danger { background: var(--accent-color); }
+        .btn-warning { background: #f0ad4e; color: #fff; }
+        table.data-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
+        table.data-table th, table.data-table td { border: 1px solid var(--border-color); padding: 10px 12px; text-align: left; }
+        table.data-table th { background: #f1f5f3; color: var(--primary-color); }
+        .map-responsive-wrapper { position: relative; width: 100%; height: 400px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); margin-top: 10px; }
+        .sidebar-widget { background: #fafbfc; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .news-list { list-style: none; }
+        .news-list li { padding: 12px 0; border-bottom: 1px dashed var(--border-color); font-size: 14px; }
+        .news-list .date { font-size: 12px; color: #777; display: block; margin-top: 4px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: #fff; padding: 25px; border-radius: 8px; width: 100%; max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .modal-header { font-size: 18px; font-weight: bold; color: var(--primary-color); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .close-modal { cursor: pointer; font-size: 20px; color: #aaa; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 9px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; }
+        .admin-only { display: none; }
+        body.is-admin .admin-only { display: inline-flex; }
+        footer { background: #2c3e50; color: #fff; text-align: center; padding: 20px; font-size: 13px; border-top: 4px solid var(--secondary-color); }
+    </style>
+</head>
+<body>
+
+<div class="portal-wrapper">
+    <div class="top-status-bar">
+        <span><i class="fa-solid fa-location-dot"></i> Xã Phú Lạc, Tỉnh Thái Nguyên</span>
+        <div>
+            <span id="realtime-clock"><i class="fa-regular fa-clock"></i> Đang tải thời gian...</span>
+            <button id="authBtn" class="admin-login-btn" onclick="toggleAuthModal()"><i class="fa-solid fa-lock"></i> Quản trị viên đăng nhập</button>
+        </div>
+    </div>
+
+    <div class="portal-banner">
+        <h1>Xóm Quyết Thắng</h1>
+        <p>Hệ Thống Quản Lý Thông Tin Hành Chính & Không Gian Cơ Sở</p>
+    </div>
+
+    <div class="slogan-banner">"Đoàn Kết - Dân Chủ - Kỷ Cương - Đổi Mới - Phát Triển"</div>
+
+    <div class="dashboard-container">
+        <main>
+            <section>
+                <h2 class="section-title"><span><i class="fa-solid fa-circle-info"></i> Giới thiệu chung & Thống kê cơ sở</span></h2>
+                <div class="intro-box">
+                    Xóm Quyết Thắng hoạt động từ ngày <strong>01/07/2026</strong>, sáp nhập từ 3 xóm: <strong>Đại Hà, Lũng 1 và Lũng 2</strong>.
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="label">Tổng hộ dân</div><div class="value" id="statHoles">337 Hộ</div></div>
+                    <div class="stat-card"><div class="label">Tổng nhân khẩu</div><div class="value" id="statPeople">1.376 Người</div></div>
+                    <div class="stat-card"><div class="label">Hoạt động từ</div><div class="value" style="font-size: 18px; margin-top: 8px;">01/07/2026</div></div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title"><span><i class="fa-solid fa-users-gear"></i> Cán Bộ Quản Lý Chủ Chốt</span></h2>
+                <div class="officials-grid">
+                    <div class="official-card">
+                        <div class="avatar-icon"><i class="fa-solid fa-user-tie"></i></div>
+                        <h3>LƯU CHÍ CÔNG</h3>
+                        <div class="position">Bí thư Chi bộ</div>
+                        <a href="tel:0978043555" class="phone-btn"><i class="fa-solid fa-phone"></i> 0978.043.555</a>
+                    </div>
+                    <div class="official-card">
+                        <div class="avatar-icon"><i class="fa-solid fa-user-tie"></i></div>
+                        <h3>NGUYỄN MINH SANG</h3>
+                        <div class="position">Phó Bí thư - Trưởng Xóm</div>
+                        <a href="tel:0973853697" class="phone-btn"><i class="fa-solid fa-phone"></i> 0973.853.697</a>
+                    </div>
+                    <div class="official-card">
+                        <div class="avatar-icon"><i class="fa-solid fa-user-tie"></i></div>
+                        <h3>PHẠM TUẤN VŨ</h3>
+                        <div class="position">Trưởng Ban CTMT - Bí thư Đoàn Thanh niên</div>
+                        <a href="tel:0352879993" class="phone-btn"><i class="fa-solid fa-phone"></i> 0352.879.993</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quản lý Khu vực -->
+            <section>
+                <h2 class="section-title">
+                    <span><i class="fa-solid fa-map-pin"></i> Quản Lý Khu Vực & Tổ Liên Gia</span>
+                    <button class="btn-action admin-only" onclick="openAreaModal()"><i class="fa-solid fa-plus"></i> Thêm khu vực</button>
+                </h2>
+                <div class="lookup-box">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Khu vực / Xóm cũ</th><th>Tên Tổ / Tiểu khu</th><th>Số hộ</th><th>Ghi chú</th><th class="admin-only" style="width: 100px;">Thao tác</th></tr>
+                        </thead>
+                        <tbody id="areaTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Quản lý Hộ dân -->
+            <section>
+                <h2 class="section-title">
+                    <span><i class="fa-solid fa-address-book"></i> Tra Cứu Hộ Gia Đình</span>
+                    <button class="btn-action admin-only" onclick="openHouseholdModal()"><i class="fa-solid fa-plus"></i> Thêm hộ dân</button>
+                </h2>
+                <div class="lookup-box">
+                    <div class="search-group">
+                        <input type="text" id="householdSearchInput" placeholder="Nhập tên chủ hộ hoặc số điện thoại..." onkeyup="renderHouseholds()">
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>STT</th><th>Chủ hộ</th><th>Nhân khẩu</th><th>SĐT</th><th>Địa chỉ</th><th class="admin-only" style="width: 100px;">Thao tác</th></tr>
+                        </thead>
+                        <tbody id="householdTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Quản lý Tài chính -->
+            <section>
+                <h2 class="section-title">
+                    <span><i class="fa-solid fa-file-invoice-dollar"></i> Quản Lý Thu Chi Quỹ Xóm</span>
+                    <button class="btn-action admin-only" onclick="openFinanceModal()"><i class="fa-solid fa-plus"></i> Thêm giao dịch</button>
+                </h2>
+                <div class="lookup-box">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Ngày</th><th>Nội dung</th><th>Loại</th><th>Số tiền</th><th class="admin-only" style="width: 80px;">Xóa</th></tr>
+                        </thead>
+                        <tbody id="financeTableBody"></tbody>
+                    </table>
+                    <div style="margin-top: 15px; text-align: right; font-weight: bold;" id="financeSummary">Số dư quỹ: 0 VNĐ</div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title"><span><i class="fa-solid fa-map-location-dot"></i> Bản Đồ Vị Trí & Chỉ Đường</span></h2>
+                <div class="map-responsive-wrapper">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3715.5!2d105.6329508!3d21.6994864!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3134d100492c48f5%3A0x55c5a9918c298a2!2zWMOzbSBMxaluZy ശി!5e0!3m2!1svi!2svn!4v1710000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </section>
+        </main>
+
+        <aside>
+            <div class="sidebar-widget">
+                <h2 class="section-title" style="font-size: 16px;">
+                    <span><i class="fa-solid fa-bullhorn"></i> Bản Tin</span>
+                    <button class="btn-action admin-only" style="padding: 2px 6px; font-size: 11px;" onclick="openNewsModal()"><i class="fa-solid fa-plus"></i></button>
+                </h2>
+                <ul class="news-list" id="newsListContainer"></ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer>Cổng thông tin điện tử Xóm Quyết Thắng, xã Phú Lạc, tỉnh Thái Nguyên.</footer>
+</div>
+
+<!-- MODALS -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><span>Đăng Nhập Quản Trị</span><span class="close-modal" onclick="toggleAuthModal()">&times;</span></div>
+        <div class="form-group"><label>Tài khoản:</label><input type="text" id="adminUser" placeholder="admin"></div>
+        <div class="form-group"><label>Mật khẩu:</label><input type="password" id="adminPass" placeholder="quyetthang2026"></div>
+        <div style="text-align: right; margin-top: 15px;"><button class="btn-action" onclick="handleLogin()">Đăng nhập</button></div>
+    </div>
+</div>
+
+<div id="areaModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><span id="areaModalTitle">Thêm Khu Vực</span><span class="close-modal" onclick="closeModals()">&times;</span></div>
+        <input type="hidden" id="areaEditIndex">
+        <div class="form-group"><label>Khu vực cũ:</label><input type="text" id="oldArea"></div>
+        <div class="form-group"><label>Tên Tổ:</label><input type="text" id="subArea"></div>
+        <div class="form-group"><label>Số hộ:</label><input type="text" id="countHoles"></div>
+        <div class="form-group"><label>Ghi chú:</label><input type="text" id="noteArea"></div>
+        <div style="text-align: right; margin-top: 15px;"><button class="btn-action" onclick="saveArea()">Lưu</button></div>
+    </div>
+</div>
+
+<div id="householdModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><span id="householdModalTitle">Thêm Hộ Dân</span><span class="close-modal" onclick="closeModals()">&times;</span></div>
+        <input type="hidden" id="householdEditIndex">
+        <div class="form-group"><label>Tên chủ hộ:</label><input type="text" id="hName"></div>
+        <div class="form-group"><label>Số nhân khẩu:</label><input type="number" id="hPeopleCount"></div>
+        <div class="form-group"><label>Số điện thoại:</label><input type="text" id="hPhone"></div>
+        <div class="form-group"><label>Địa chỉ / Tổ:</label><input type="text" id="hAddress"></div>
+        <div style="text-align: right; margin-top: 15px;"><button class="btn-action" onclick="saveHousehold()">Lưu</button></div>
+    </div>
+</div>
+
+<div id="financeModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><span>Thêm Thu/Chi</span><span class="close-modal" onclick="closeModals()">&times;</span></div>
+        <div class="form-group"><label>Ngày:</label><input type="date" id="fDate"></div>
+        <div class="form-group"><label>Nội dung:</label><input type="text" id="fContent"></div>
+        <div class="form-group"><label>Loại:</label><select id="fType"><option value="THU">Thu</option><option value="CHI">Chi</option></select></div>
+        <div class="form-group"><label>Số tiền:</label><input type="number" id="fAmount"></div>
+        <div style="text-align: right; margin-top: 15px;"><button class="btn-action" onclick="saveFinance()">Lưu</button></div>
+    </div>
+</div>
+
+<div id="newsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><span id="newsModalTitle">Bản Tin</span><span class="close-modal" onclick="closeModals()">&times;</span></div>
+        <input type="hidden" id="newsEditIndex">
+        <div class="form-group"><label>Tiêu đề:</label><input type="text" id="nTitle"></div>
+        <div class="form-group"><label>Thời gian:</label><input type="text" id="nDate"></div>
+        <div style="text-align: right; margin-top: 15px;"><button class="btn-action" onclick="saveNews()">Lưu</button></div>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = 'ĐIỀN_URL_GOOGLE_APPS_SCRIPT_VÀO_ĐÂY';
+
+    let areasData = [];
+    let householdsData = [];
+    let financeData = [];
+    let newsData = [];
+    let isAdmin = localStorage.getItem('qt_is_admin') === 'true';
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (isAdmin) enableAdminUI(true);
+        fetchAllData();
+        setInterval(runRealtimeClock, 1000);
+    });
+
+    function runRealtimeClock() {
+        const now = new Date();
+        document.getElementById('realtime-clock').innerHTML = `<i class="fa-regular fa-clock"></i> ${now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+    }
+
+    function fetchAllData() {
+        fetchData('Areas', data => { areasData = data; renderAreas(); });
+        fetchData('Households', data => { householdsData = data; renderHouseholds(); updateStats(); });
+        fetchData('Finance', data => { financeData = data; renderFinance(); });
+        fetchData('News', data => { newsData = data; renderNews(); });
+    }
+
+    function fetchData(sheetName, callback) {
+        fetch(`${SCRIPT_URL}?sheet=${sheetName}`)
+            .then(res => res.json())
+            .then(data => callback(data))
+            .catch(err => console.error(`Lỗi tải ${sheetName}:`, err));
+    }
+
+    function syncDataToSheet(sheetName, dataArray, callback) {
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sheet: sheetName, data: dataArray })
+        }).then(() => {
+            if(callback) callback();
+        }).catch(err => alert('Lỗi đồng bộ: ' + err));
+    }
+
+    function toggleAuthModal() {
+        if (isAdmin) {
+            if (confirm("Đăng xuất quyền quản trị?")) {
+                isAdmin = false;
+                localStorage.setItem('qt_is_admin', 'false');
+                enableAdminUI(false);
+            }
+        } else {
+            const m = document.getElementById('authModal');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+        }
+    }
+
+    function handleLogin() {
+        if (document.getElementById('adminUser').value.trim() === 'admin' && document.getElementById('adminPass').value.trim() === 'quyetthang2026') {
+            isAdmin = true;
+            localStorage.setItem('qt_is_admin', 'true');
+            enableAdminUI(true);
+            document.getElementById('authModal').style.display = 'none';
+            alert("Đăng nhập thành công!");
+        } else { alert("Sai tài khoản hoặc mật khẩu!"); }
+    }
+
+    function enableAdminUI(status) {
+        if (status) {
+            document.body.classList.add('is-admin');
+            document.getElementById('authBtn').innerHTML = `<i class="fa-solid fa-unlock"></i> Đăng xuất (Admin)`;
+        } else {
+            document.body.classList.remove('is-admin');
+            document.getElementById('authBtn').innerHTML = `<i class="fa-solid fa-lock"></i> Quản trị viên đăng nhập`;
+        }
+        renderAreas(); renderHouseholds(); renderFinance(); renderNews();
+    }
+
+    function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+
+    // RENDER & SAVE AREAS
+    function renderAreas() {
+        const tb = document.getElementById('areaTableBody'); tb.innerHTML = '';
+        areasData.forEach((item, i) => {
+            tb.innerHTML += `<tr><td>${item.old}</td><td>${item.sub}</td><td>${item.count}</td><td>${item.note}</td><td class="admin-only"><button class="btn-action btn-warning" onclick="openAreaModal(${i})"><i class="fa-solid fa-pen"></i></button> <button class="btn-action btn-danger" onclick="deleteArea(${i})"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+        });
+        if (isAdmin) document.body.classList.add('is-admin');
+    }
+    function openAreaModal(i = null) {
+        document.getElementById('areaModal').style.display = 'flex';
+        document.getElementById('areaEditIndex').value = i !== null ? i : '';
+        document.getElementById('oldArea').value = i !== null ? areasData[i].old : '';
+        document.getElementById('subArea').value = i !== null ? areasData[i].sub : '';
+        document.getElementById('countHoles').value = i !== null ? areasData[i].count : '';
+        document.getElementById('noteArea').value = i !== null ? areasData[i].note : '';
+    }
+    function saveArea() {
+        const i = document.getElementById('areaEditIndex').value;
+        const obj = { old: document.getElementById('oldArea').value, sub: document.getElementById('subArea').value, count: document.getElementById('countHoles').value, note: document.getElementById('noteArea').value };
+        if(i === '') areasData.push(obj); else areasData[i] = obj;
+        syncDataToSheet('Areas', areasData, () => { closeModals(); renderAreas(); });
+    }
+    function deleteArea(i) { if(confirm("Xóa khu vực này?")) { areasData.splice(i, 1); syncDataToSheet('Areas', areasData, renderAreas); } }
+
+    // RENDER & SAVE HOUSEHOLDS
+    function renderHouseholds() {
+        const kw = document.getElementById('householdSearchInput').value.toLowerCase();
+        const tb = document.getElementById('householdTableBody'); tb.innerHTML = '';
+        householdsData.filter(h => String(h.name).toLowerCase().includes(kw) || String(h.phone).includes(kw)).forEach((item, index) => {
+            let realIdx = householdsData.indexOf(item);
+            tb.innerHTML += `<tr><td>${index + 1}</td><td><strong>${item.name}</strong></td><td>${item.people} người</td><td>${item.phone}</td><td>${item.address}</td><td class="admin-only"><button class="btn-action btn-warning" onclick="openHouseholdModal(${realIdx})"><i class="fa-solid fa-pen"></i></button> <button class="btn-action btn-danger" onclick="deleteHousehold(${realIdx})"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+        });
+        if (isAdmin) document.body.classList.add('is-admin');
+    }
+    function openHouseholdModal(i = null) {
+        document.getElementById('householdModal').style.display = 'flex';
+        document.getElementById('householdEditIndex').value = i !== null ? i : '';
+        document.getElementById('hName').value = i !== null ? householdsData[i].name : '';
+        document.getElementById('hPeopleCount').value = i !== null ? householdsData[i].people : '';
+        document.getElementById('hPhone').value = i !== null ? householdsData[i].phone : '';
+        document.getElementById('hAddress').value = i !== null ? householdsData[i].address : '';
+    }
+    function saveHousehold() {
+        const i = document.getElementById('householdEditIndex').value;
+        const obj = { name: document.getElementById('hName').value, people: Number(document.getElementById('hPeopleCount').value) || 0, phone: document.getElementById('hPhone').value, address: document.getElementById('hAddress').value };
+        if(i === '') householdsData.push(obj); else householdsData[i] = obj;
+        syncDataToSheet('Households', householdsData, () => { closeModals(); renderHouseholds(); updateStats(); });
+    }
+    function deleteHousehold(i) { if(confirm("Xóa hộ dân này?")) { householdsData.splice(i, 1); syncDataToSheet('Households', householdsData, () => { renderHouseholds(); updateStats(); }); } }
+
+    // RENDER & SAVE FINANCE
+    function renderFinance() {
+        const tb = document.getElementById('financeTableBody'); tb.innerHTML = '';
+        let balance = 0;
+        financeData.forEach((item, i) => {
+            let amt = Number(item.amount);
+            if(item.type === 'THU') balance += amt; else balance -= amt;
+            tb.innerHTML += `<tr><td>${item.date}</td><td>${item.content}</td><td><span style="color:${item.type==='THU'?'green':'red'}">${item.type}</span></td><td>${amt.toLocaleString('vi-VN')} đ</td><td class="admin-only"><button class="btn-action btn-danger" onclick="deleteFinance(${i})"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+        });
+        document.getElementById('financeSummary').innerHTML = `Số dư quỹ hiện tại: <span style="color: #1b4d3e;">${balance.toLocaleString('vi-VN')} VNĐ</span>`;
+        if (isAdmin) document.body.classList.add('is-admin');
+    }
+    function openFinanceModal() {
+        document.getElementById('financeModal').style.display = 'flex';
+        document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('fContent').value = ''; document.getElementById('fAmount').value = '';
+    }
+    function saveFinance() {
+        const obj = { date: document.getElementById('fDate').value, content: document.getElementById('fContent').value, type: document.getElementById('fType').value, amount: Number(document.getElementById('fAmount').value) || 0 };
+        financeData.push(obj);
+        syncDataToSheet('Finance', financeData, () => { closeModals(); renderFinance(); });
+    }
+    function deleteFinance(i) { if(confirm("Xóa giao dịch này?")) { financeData.splice(i, 1); syncDataToSheet('Finance', financeData, renderFinance); } }
+
+    // RENDER & SAVE NEWS
+    function renderNews() {
+        const c = document.getElementById('newsListContainer'); c.innerHTML = '';
+        newsData.forEach((item, i) => {
+            c.innerHTML += `<li><strong>${item.title}</strong><span class="date">${item.date}</span><div class="admin-only" style="margin-top:5px;"><button class="btn-action btn-warning" style="padding:2px 5px;font-size:11px;" onclick="openNewsModal(${i})"><i class="fa-solid fa-pen"></i></button> <button class="btn-action btn-danger" style="padding:2px 5px;font-size:11px;" onclick="deleteNews(${i})"><i class="fa-solid fa-trash"></i></button></div></li>`;
+        });
+        if (isAdmin) document.body.classList.add('is-admin');
+    }
+    function openNewsModal(i = null) {
+        document.getElementById('newsModal').style.display = 'flex';
+        document.getElementById('newsEditIndex').value = i !== null ? i : '';
+        document.getElementById('nTitle').value = i !== null ? newsData[i].title : '';
+        document.getElementById('nDate').value = i !== null ? newsData[i].date : '📅 Hiệu lực: ' + new Date().toLocaleDateString('vi-VN');
+    }
+    function saveNews() {
+        const i = document.getElementById('newsEditIndex').value;
+        const obj = { title: document.getElementById('nTitle').value, date: document.getElementById('nDate').value };
+        if(i === '') newsData.unshift(obj); else newsData[i] = obj;
+        syncDataToSheet('News', newsData, () => { closeModals(); renderNews(); });
+    }
+    function deleteNews(i) { if(confirm("Xóa bản tin này?")) { newsData.splice(i, 1); syncDataToSheet('News', newsData, renderNews); } }
+
+    function updateStats() {
+        document.getElementById('statHoles').innerText = `${householdsData.length + 332} Hộ`;
+        let totalP = householdsData.reduce((sum, h) => sum + (Number(h.people) || 0), 1300);
+        document.getElementById('statPeople').innerText = `${totalP} Người`;
+    }
+</script>
+</body>
+</html>
